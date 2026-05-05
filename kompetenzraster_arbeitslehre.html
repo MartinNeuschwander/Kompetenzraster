@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kompetenzraster – Arbeitslehre</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;600&display=swap');
+
+  :root {
+    --amber: #E8A020;
+    --amber-light: #FDF3E0;
+    --amber-dark: #B37A10;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --gray-light: #F7F6F3;
+    --gray-border: #DDD9CE;
+    --text: #2C2C2A;
+    --text-muted: #5F5E5A;
+
+    /* Niveaustufen */
+    --n1: #D85A30; /* noch nicht */
+    --n2: #E8A020; /* mit Hilfe */
+    --n3: #1D9E75; /* alleine */
+    --n4: #534AB7; /* ich kann es erklären */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
+    padding: 24px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--purple);
+  }
+  .header-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .header-sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+  .header-badge {
+    background: var(--purple-light);
+    border: 1.5px solid var(--purple);
+    color: var(--purple);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* META */
+  .meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .meta-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .meta-field input {
+    width: 100%;
+    border: 1.5px solid var(--gray-border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 13px;
+    background: var(--gray-light);
+  }
+
+  /* LEGENDE */
+  .legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    background: var(--gray-light);
+    border-radius: 10px;
+    border: 1.5px solid var(--gray-border);
+  }
+  .legend-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+  }
+  .legend-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* KOMPETENZBEREICH */
+  .bereich {
+    margin-bottom: 20px;
+    border: 1.5px solid var(--gray-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .bereich-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+  .bereich-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .bereich-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .bereich-dim {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #fff;
+  }
+
+  /* KOMPETENZ-TABELLE */
+  .kompetenz-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .kompetenz-table th {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    text-align: left;
+    background: var(--gray-light);
+    border-top: 1.5px solid var(--gray-border);
+    border-bottom: 1.5px solid var(--gray-border);
+  }
+  .kompetenz-table th.level-col { text-align: center; width: 48px; }
+  .kompetenz-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-border);
+    vertical-align: middle;
+  }
+  .kompetenz-table tr:last-child td { border-bottom: none; }
+  .kompetenz-table td.level-col { text-align: center; }
+
+  .kompetenz-text {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text);
+  }
+  .kompetenz-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  /* NIVEAU-BUTTON */
+  .niveau-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2.5px solid var(--gray-border);
+    background: var(--gray-light);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .niveau-btn:active { transform: scale(0.92); }
+  .niveau-btn.selected-1 { background: var(--n1); border-color: var(--n1); }
+  .niveau-btn.selected-2 { background: var(--n2); border-color: var(--amber-dark); }
+  .niveau-btn.selected-3 { background: var(--n3); border-color: #0f7354; }
+  .niveau-btn.selected-4 { background: var(--n4); border-color: #3c358a; }
+
+  /* COLOR VARIANTS */
+  .b-amber .bereich-header { background: var(--amber-light); }
+  .b-amber .bereich-icon { background: var(--amber); }
+  .b-amber .bereich-title { color: var(--amber-dark); }
+  .b-amber .bereich-dim { background: var(--amber); }
+
+  .b-teal .bereich-header { background: var(--teal-light); }
+  .b-teal .bereich-icon { background: var(--teal); }
+  .b-teal .bereich-title { color: #085041; }
+  .b-teal .bereich-dim { background: var(--teal); }
+
+  .b-purple .bereich-header { background: var(--purple-light); }
+  .b-purple .bereich-icon { background: var(--purple); }
+  .b-purple .bereich-title { color: #3C3489; }
+  .b-purple .bereich-dim { background: var(--purple); }
+
+  .b-coral .bereich-header { background: var(--coral-light); }
+  .b-coral .bereich-icon { background: var(--coral); }
+  .b-coral .bereich-title { color: #4A1B0C; }
+  .b-coral .bereich-dim { background: var(--coral); }
+
+  /* NOTIZ */
+  .notiz-row td { padding: 8px 12px; background: var(--gray-light); }
+  .notiz-row input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--gray-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 12px;
+    background: #fff;
+    color: var(--text);
+  }
+  .notiz-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-style: italic;
+  }
+
+  /* FORTSCHRITTSBALKEN */
+  .progress-section {
+    margin-bottom: 20px;
+    padding: 14px;
+    background: var(--gray-light);
+    border-radius: 10px;
+    border: 1.5px solid var(--gray-border);
+  }
+  .progress-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .progress-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 140px;
+    flex-shrink: 0;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    height: 14px;
+    background: #fff;
+    border: 1.5px solid var(--gray-border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .progress-pct {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    width: 36px;
+    text-align: right;
+    color: var(--text-muted);
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1.5px solid var(--gray-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-note { font-size: 11px; color: var(--text-muted); max-width: 400px; line-height: 1.5; }
+  .footer-tag {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--purple);
+    background: var(--purple-light);
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+
+  @media print {
+    body { padding: 10px; font-size: 12px; }
+    .bereich { break-inside: avoid; }
+    .niveau-btn { border-width: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Kompetenzraster</div>
+    <div class="header-sub">Arbeitslehre – Was kann ich schon?</div>
+  </div>
+  <div class="header-badge">Selbsteinschätzung</div>
+</div>
+
+<div class="meta-row">
+  <div class="meta-field">
+    <label>Name</label>
+    <input type="text" placeholder="Vorname …" />
+  </div>
+  <div class="meta-field">
+    <label>Klasse</label>
+    <input type="text" placeholder="z. B. 8a" />
+  </div>
+  <div class="meta-field">
+    <label>Datum</label>
+    <input type="date" />
+  </div>
+</div>
+
+<!-- LEGENDE -->
+<div class="legend">
+  <div class="legend-title">So funktioniert das Raster – tippe auf einen Kreis, um dein Niveau zu wählen:</div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--n1);">●</div>
+    <span><strong>Noch nicht</strong> – das kenne ich noch kaum</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--n2);">●</div>
+    <span><strong>Mit Hilfe</strong> – ich schaffe es, wenn jemand dabei ist</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--n3);">●</div>
+    <span><strong>Alleine</strong> – ich schaffe es selbständig</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--n4);">●</div>
+    <span><strong>Ich kann es erklären</strong> – ich könnte anderen helfen</span>
+  </div>
+</div>
+
+<!-- FORTSCHRITTSBALKEN -->
+<div class="progress-section" id="progressSection">
+  <div class="progress-title">📊 Mein Überblick – wie weit bin ich insgesamt?</div>
+  <div class="progress-area" id="progressArea">
+    <div class="progress-row">
+      <div class="progress-label">Planen & Organisieren</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-org" style="width:0%;background:var(--amber);"></div></div>
+      <div class="progress-pct" id="pp-org">0%</div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label">Zusammenarbeit</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-soz" style="width:0%;background:var(--teal);"></div></div>
+      <div class="progress-pct" id="pp-soz">0%</div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label">Fachliches Arbeiten</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-fach" style="width:0%;background:var(--purple);"></div></div>
+      <div class="progress-pct" id="pp-fach">0%</div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label">Reflexion & Selbst.</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-ref" style="width:0%;background:var(--coral);"></div></div>
+      <div class="progress-pct" id="pp-ref">0%</div>
+    </div>
+  </div>
+</div>
+
+<!-- BEREICH 1: PLANEN & ORGANISIEREN -->
+<div class="bereich b-amber">
+  <div class="bereich-header">
+    <div class="bereich-icon">🗓️</div>
+    <div class="bereich-title">Planen &amp; Organisieren</div>
+    <div class="bereich-dim">Organisatorische Kontrolle</div>
+  </div>
+  <table class="kompetenz-table">
+    <thead>
+      <tr>
+        <th>Was ich können soll …</th>
+        <th class="level-col">Noch<br>nicht</th>
+        <th class="level-col">Mit<br>Hilfe</th>
+        <th class="level-col">Alleine</th>
+        <th class="level-col">Kann ich<br>erklären</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann ein Ziel für meinen Arbeitstag benennen.</div>
+          <div class="kompetenz-sub">„Heute will ich … fertig haben."</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="0" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="0" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="0" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="0" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann meinen Arbeitsablauf im Voraus planen.</div>
+          <div class="kompetenz-sub">Wer macht was? In welcher Reihenfolge?</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="1" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="1" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="1" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="1" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann meine Zeit einteilen und Pausen selbst planen.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="2" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="2" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="2" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="2" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann meinen Plan anpassen, wenn etwas nicht funktioniert.</div>
+          <div class="kompetenz-sub">Ich finde einen Plan B.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="3" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="3" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="3" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="org" data-row="3" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr class="notiz-row">
+        <td colspan="5">
+          <div class="notiz-label">Meine Notiz dazu (optional):</div>
+          <input type="text" placeholder="Was fällt mir dazu auf? Was möchte ich üben?" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BEREICH 2: ZUSAMMENARBEIT -->
+<div class="bereich b-teal">
+  <div class="bereich-header">
+    <div class="bereich-icon">🤝</div>
+    <div class="bereich-title">Zusammenarbeit &amp; Kommunikation</div>
+    <div class="bereich-dim">Methodische Kontrolle</div>
+  </div>
+  <table class="kompetenz-table">
+    <thead>
+      <tr>
+        <th>Was ich können soll …</th>
+        <th class="level-col">Noch<br>nicht</th>
+        <th class="level-col">Mit<br>Hilfe</th>
+        <th class="level-col">Alleine</th>
+        <th class="level-col">Kann ich<br>erklären</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann mich mit meiner Gruppe absprechen.</div>
+          <div class="kompetenz-sub">Ich höre zu und lasse andere ausreden.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="0" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="0" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="0" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="0" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann meine eigene Meinung sagen und begründen.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="1" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="1" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="1" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="1" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann die passenden Materialien und Methoden auswählen.</div>
+          <div class="kompetenz-sub">Welches Werkzeug? Welche Anleitung? Wer kann helfen?</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="2" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="2" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="2" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="2" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann anderen helfen oder um Hilfe bitten, wenn nötig.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="3" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="3" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="3" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="soz" data-row="3" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr class="notiz-row">
+        <td colspan="5">
+          <div class="notiz-label">Meine Notiz dazu (optional):</div>
+          <input type="text" placeholder="Was fällt mir dazu auf? Was möchte ich üben?" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BEREICH 3: FACHLICHES ARBEITEN -->
+<div class="bereich b-purple">
+  <div class="bereich-header">
+    <div class="bereich-icon">🔨</div>
+    <div class="bereich-title">Fachliches Arbeiten</div>
+    <div class="bereich-dim">Inhaltliche Kontrolle</div>
+  </div>
+  <table class="kompetenz-table">
+    <thead>
+      <tr>
+        <th>Was ich können soll …</th>
+        <th class="level-col">Noch<br>nicht</th>
+        <th class="level-col">Mit<br>Hilfe</th>
+        <th class="level-col">Alleine</th>
+        <th class="level-col">Kann ich<br>erklären</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann Werkzeuge und Materialien sicher und sauber benutzen.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="0" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="0" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="0" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="0" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann eine Anleitung lesen und umsetzen.</div>
+          <div class="kompetenz-sub">Schritt für Schritt vorgehen.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="1" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="1" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="1" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="1" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann mein Ergebnis auf Qualität prüfen.</div>
+          <div class="kompetenz-sub">Ist es so geworden wie geplant? Was könnte besser sein?</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="2" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="2" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="2" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="2" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann Fehler erkennen und selbst korrigieren.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="3" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="3" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="3" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="fach" data-row="3" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr class="notiz-row">
+        <td colspan="5">
+          <div class="notiz-label">Meine Notiz dazu (optional):</div>
+          <input type="text" placeholder="Was fällt mir dazu auf? Was möchte ich üben?" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BEREICH 4: REFLEXION -->
+<div class="bereich b-coral">
+  <div class="bereich-header">
+    <div class="bereich-icon">🪞</div>
+    <div class="bereich-title">Reflexion &amp; Selbstständigkeit</div>
+    <div class="bereich-dim">Normbezogene Kontrolle</div>
+  </div>
+  <table class="kompetenz-table">
+    <thead>
+      <tr>
+        <th>Was ich können soll …</th>
+        <th class="level-col">Noch<br>nicht</th>
+        <th class="level-col">Mit<br>Hilfe</th>
+        <th class="level-col">Alleine</th>
+        <th class="level-col">Kann ich<br>erklären</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann beschreiben, was ich heute gelernt habe.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="0" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="0" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="0" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="0" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann einschätzen, was gut und was weniger gut gelaufen ist.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="1" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="1" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="1" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="1" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann meine Meinung zu Regeln und Bewertungen äußern.</div>
+          <div class="kompetenz-sub">Ich sage, was ich fair oder unfair finde.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="2" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="2" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="2" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="2" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kompetenz-text">Ich kann konkrete nächste Schritte für meine Weiterentwicklung benennen.</div>
+        </td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="3" data-level="1" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="3" data-level="2" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="3" data-level="3" onclick="setNiveau(this)">●</button></td>
+        <td class="level-col"><button class="niveau-btn" data-group="ref" data-row="3" data-level="4" onclick="setNiveau(this)">●</button></td>
+      </tr>
+      <tr class="notiz-row">
+        <td colspan="5">
+          <div class="notiz-label">Meine Notiz dazu (optional):</div>
+          <input type="text" placeholder="Was fällt mir dazu auf? Was möchte ich üben?" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <div class="footer-note">
+    Dieses Raster zeigt deinen Lernstand – kein Richtig oder Falsch. Es geht darum zu sehen, wo du gerade stehst und wohin du wachsen möchtest.
+  </div>
+  <div class="footer-tag">Kompetenzraster · Arbeitslehre</div>
+</div>
+
+<script>
+  // Speichert gewählte Niveaus pro Gruppe und Zeile
+  const state = { org: {}, soz: {}, fach: {}, ref: {} };
+  const colors = { 1: 'var(--n1)', 2: 'var(--n2)', 3: 'var(--n3)', 4: 'var(--n4)' };
+
+  function setNiveau(btn) {
+    const group = btn.dataset.group;
+    const row = btn.dataset.row;
+    const level = parseInt(btn.dataset.level);
+
+    // Gleichen Button nochmal klicken = abwählen
+    if (state[group][row] === level) {
+      state[group][row] = null;
+      // Alle Buttons dieser Zeile zurücksetzen
+      document.querySelectorAll(`[data-group="${group}"][data-row="${row}"]`).forEach(b => {
+        b.className = 'niveau-btn';
+        b.style.background = '';
+        b.style.borderColor = '';
+      });
+    } else {
+      state[group][row] = level;
+      // Alle Buttons dieser Zeile zurücksetzen
+      document.querySelectorAll(`[data-group="${group}"][data-row="${row}"]`).forEach(b => {
+        b.className = 'niveau-btn';
+        b.style.background = '';
+        b.style.borderColor = '';
+      });
+      // Ausgewählten Button einfärben
+      btn.style.background = colors[level];
+      btn.style.borderColor = colors[level];
+      btn.style.color = '#fff';
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const groups = {
+      org:  { bar: 'pb-org',  pct: 'pp-org'  },
+      soz:  { bar: 'pb-soz',  pct: 'pp-soz'  },
+      fach: { bar: 'pb-fach', pct: 'pp-fach' },
+      ref:  { bar: 'pb-ref',  pct: 'pp-ref'  }
+    };
+    const maxLevel = 4;
+    const rows = 4;
+
+    for (const [group, ids] of Object.entries(groups)) {
+      let total = 0;
+      for (let r = 0; r < rows; r++) {
+        total += state[group][r] || 0;
+      }
+      const pct = Math.round((total / (rows * maxLevel)) * 100);
+      document.getElementById(ids.bar).style.width = pct + '%';
+      document.getElementById(ids.pct).textContent = pct + '%';
+    }
+  }
+</script>
+
+</body>
+</html>
